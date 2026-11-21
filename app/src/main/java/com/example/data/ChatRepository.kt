@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.CancellationException
@@ -251,8 +252,10 @@ class FirebaseChatRepository(
                 "updatedAt" to FieldValue.serverTimestamp(),
             )
             val batch = db.batch()
-            batch.update(db.collection("users").document(uid), presenceUpdate)
-            batch.update(db.collection("handles").document(normalizeHandleInput(handle)), presenceUpdate)
+            val userRef = db.collection("users").document(uid)
+            val handleRef = db.collection("handles").document(normalizeHandleInput(handle))
+            batch.set(userRef, presenceUpdate, SetOptions.merge())
+            batch.set(handleRef, presenceUpdate, SetOptions.merge())
             batch.commit().await()
             Result.success(Unit)
         } catch (e: CancellationException) {

@@ -338,7 +338,7 @@ fun ChatWindow(
                         }
 
                         // Circular Monochrome Contact/Group Avatar with Live Presence Dot
-                        val isOnline = !isGroup && peerPresence?.online == true
+                        val isOnline = !isGroup && peerPresence?.isCurrentlyOnline() == true
                         Box(modifier = Modifier.size(38.dp)) {
                             Box(
                                 modifier = Modifier

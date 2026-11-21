@@ -13,6 +13,7 @@ import com.example.data.encodeMemberLabel
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,6 +48,21 @@ class ChatViewModel(
 
     val isDemoMode: Boolean = repository.isDemoMode
     val demoDirectory: List<HandleDirectoryEntry> = repository.getDemoDirectory()
+
+    init {
+        viewModelScope.launch {
+            while (true) {
+                delay(45_000L)
+                val accState = accountState.value
+                if (accState is UiState.Success && accState.data != null) {
+                    val user = accState.data
+                    if (user.handle.isNotBlank()) {
+                        repository.setOnlineStatus(currentUserId, user.handle, true)
+                    }
+                }
+            }
+        }
+    }
 
     // 1. User Account Stream (null => needs onboarding setup)
     val accountState: StateFlow<UiState<UserAccount?>> = repository.observeUserAccount(currentUserId)

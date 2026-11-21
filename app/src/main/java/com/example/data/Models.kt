@@ -32,7 +32,13 @@ data class UserAccount(
     @ServerTimestamp val lastSeenAt: Timestamp? = null,
     @ServerTimestamp val createdAt: Timestamp? = null,
     @ServerTimestamp val updatedAt: Timestamp? = null,
-)
+) {
+    fun isCurrentlyOnline(): Boolean {
+        if (!online) return false
+        val lastSeenMs = lastSeenAt?.toDate()?.time ?: return true
+        return (System.currentTimeMillis() - lastSeenMs) <= 120_000L
+    }
+}
 
 @Keep
 @IgnoreExtraProperties
@@ -46,7 +52,13 @@ data class HandleDirectoryEntry(
     @ServerTimestamp val lastSeenAt: Timestamp? = null,
     @ServerTimestamp val createdAt: Timestamp? = null,
     @ServerTimestamp val updatedAt: Timestamp? = null,
-)
+) {
+    fun isCurrentlyOnline(): Boolean {
+        if (!online) return false
+        val lastSeenMs = lastSeenAt?.toDate()?.time ?: return true
+        return (System.currentTimeMillis() - lastSeenMs) <= 120_000L
+    }
+}
 
 @Keep
 @IgnoreExtraProperties
