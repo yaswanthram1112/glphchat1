@@ -1,0 +1,8 @@
+{
+  "name": "Remix GlyphChat",
+  "description": "Pure monochrome real-time messaging app with a custom 26-letter cipher keyboard and live geometric glyph rendering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

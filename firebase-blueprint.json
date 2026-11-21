@@ -1,0 +1,275 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Owner-private user account profile storing chosen display name, unique handle, 4-digit PIN, and online presence.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the account owner."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name shown in chats (2-40 characters)."
+        },
+        "handle": {
+          "type": "string",
+          "description": "Unique lowercase handle without @ (3-24 chars, [a-z0-9_])."
+        },
+        "pin": {
+          "type": "string",
+          "description": "4-digit numeric PIN for identity verification."
+        },
+        "online": {
+          "type": "boolean",
+          "description": "Current online presence status."
+        },
+        "lastSeenAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last activity (FieldValue.serverTimestamp())."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "handle",
+        "pin",
+        "online",
+        "lastSeenAt",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HandleDirectoryEntry": {
+      "title": "HandleDirectoryEntry",
+      "description": "Public, PII-free handle lookup document keyed by lowercase handle so authenticated users can discover peers by exact handle and observe presence.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user who owns this handle."
+        },
+        "handle": {
+          "type": "string",
+          "description": "Lowercase unique handle matching the document ID."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Public display name (2-40 characters)."
+        },
+        "pin": {
+          "type": "string",
+          "description": "4-digit PIN tag."
+        },
+        "online": {
+          "type": "boolean",
+          "description": "Current online status."
+        },
+        "lastSeenAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last seen presence (FieldValue.serverTimestamp())."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "handle",
+        "displayName",
+        "pin",
+        "online",
+        "lastSeenAt",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ChatRoom": {
+      "title": "ChatRoom",
+      "description": "1-on-1 direct conversation or multi-member group chat with real-time last message preview and read receipt state.",
+      "type": "object",
+      "properties": {
+        "chatType": {
+          "type": "string",
+          "enum": ["DIRECT", "GROUP"],
+          "description": "Whether this conversation is a 1-on-1 direct chat or a group chat."
+        },
+        "name": {
+          "type": "string",
+          "description": "Group name or direct chat fallback title (1-60 characters)."
+        },
+        "creatorId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user who created the chat."
+        },
+        "memberUids": {
+          "type": "array",
+          "description": "Bounded list (1-50) of member Firebase Auth UIDs."
+        },
+        "memberLabels": {
+          "type": "object",
+          "description": "Map from member UID to 'handle|displayName' label."
+        },
+        "lastMessageText": {
+          "type": "string",
+          "description": "Plain English preview of the most recent message (0-1000 chars)."
+        },
+        "lastMessageSenderId": {
+          "type": "string",
+          "description": "UID of the sender of the most recent message."
+        },
+        "lastMessageAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the most recent message (FieldValue.serverTimestamp())."
+        },
+        "readByUids": {
+          "type": "array",
+          "description": "Bounded list (0-50) of member UIDs who have read the latest message."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "chatType",
+        "name",
+        "creatorId",
+        "memberUids",
+        "memberLabels",
+        "lastMessageText",
+        "lastMessageSenderId",
+        "lastMessageAt",
+        "readByUids",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message stored as plain English text and rendered via custom 26-letter SVG cipher glyphs, with reply references and read receipts.",
+      "type": "object",
+      "properties": {
+        "chatId": {
+          "type": "string",
+          "description": "Parent chat room document ID."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the message author."
+        },
+        "senderName": {
+          "type": "string",
+          "description": "Display name of the sender (1-40 chars)."
+        },
+        "senderHandle": {
+          "type": "string",
+          "description": "Handle of the sender (1-30 chars)."
+        },
+        "text": {
+          "type": "string",
+          "description": "Plain English message text (1-2000 chars)."
+        },
+        "memberUids": {
+          "type": "array",
+          "description": "Denormalized bounded list (1-50) of parent chat member UIDs for fast local authorization."
+        },
+        "readByUids": {
+          "type": "array",
+          "description": "Bounded list (1-50) of member UIDs who have read this message."
+        },
+        "deleted": {
+          "type": "boolean",
+          "description": "Whether this message has been deleted by its author."
+        },
+        "replyToMessageId": {
+          "type": "string",
+          "description": "Optional ID of the message being replied to."
+        },
+        "replyToText": {
+          "type": "string",
+          "description": "Optional plain English excerpt of the replied message."
+        },
+        "replyToSenderName": {
+          "type": "string",
+          "description": "Optional display name of the replied message author."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "chatId",
+        "senderId",
+        "senderName",
+        "senderHandle",
+        "text",
+        "memberUids",
+        "readByUids",
+        "deleted",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserAccount"
+      },
+      "description": "Owner-private user account profile keyed by Firebase Auth UID."
+    },
+    "/handles/{handleId}": {
+      "schema": {
+        "$ref": "#/entities/HandleDirectoryEntry"
+      },
+      "description": "PII-free unique handle registry supporting single-doc handle lookup and live presence."
+    },
+    "/chats/{chatId}": {
+      "schema": {
+        "$ref": "#/entities/ChatRoom"
+      },
+      "description": "1-on-1 direct chats and group chat rooms scoped strictly to memberUids."
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": {
+        "$ref": "#/entities/ChatMessage"
+      },
+      "description": "Real-time messages inside a chat room with denormalized memberUids."
+    }
+  }
+}

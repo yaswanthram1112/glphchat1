@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "717046292477",
+    "project_id": "glyph-5357e",
+    "storage_bucket": "glyph-5357e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717046292477:android:f658e30766de701b3ec394",
+        "android_client_info": {
+          "package_name": "com.aistudio.glyphchat.ckyjke"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "717046292477-a02v6s90r6h1pa2tf85373c1mah9vr0v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.glyphchat.ckyjke",
+            "certificate_hash": "a0db115a92cb434a5a8b7b1f0108499e72662bba"
+          }
+        },
+        {
+          "client_id": "717046292477-p5ru121es7g38huscjkl061f5ci82ju1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9siUaFd9pyz8zU8lcBB1MT-SpevRTFVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717046292477-p5ru121es7g38huscjkl061f5ci82ju1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

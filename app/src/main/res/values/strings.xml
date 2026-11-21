@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">GlyphChat</string>
+    <string name="tagline">MONOCHROME CIPHER MESSAGING</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="enter_demo_mode">Enter Demo / Local Mode</string>
+    <string name="mode_cloud">CLOUD</string>
+    <string name="mode_local">LOCAL</string>
+    <string name="onboarding_title">IDENTITY SETUP</string>
+    <string name="onboarding_subtitle">Choose your display name, unique handle, and 4-digit PIN to connect instantly.</string>
+    <string name="label_display_name">Display Name</string>
+    <string name="label_handle">Unique Handle</string>
+    <string name="label_pin">4-Digit PIN</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_new_direct">Direct</string>
+    <string name="action_new_group">Group</string>
+    <string name="search_chats_placeholder">Search chats...</string>
+    <string name="search_handle_placeholder">Enter @handle (e.g. elena_s)</string>
+    <string name="cd_toggle_theme">Toggle light and dark theme</string>
+    <string name="cd_cipher_guide">Open cipher alphabet guide</string>
+    <string name="cd_profile">Open account profile</string>
+    <string name="cd_back">Navigate back</string>
+    <string name="cd_peek_all">Toggle plain English decode for all messages</string>
+    <string name="cd_peek_bubble">Toggle plain English decode for message</string>
+    <string name="cd_group_info">Manage group members</string>
+    <string name="cd_reply">Reply to message</string>
+    <string name="cd_delete">Delete message</string>
+    <string name="cd_send">Send message</string>
+    <string name="cd_backspace">Backspace</string>
+    <string name="cd_switch_keyboard">Switch between cipher keyboard and standard keyboard</string>
+    <string name="cd_toggle_hints">Toggle English key hints</string>
+    <string name="cd_close">Close</string>
+    <string name="status_online">ONLINE</string>
+    <string name="status_offline">OFFLINE</string>
+    <string name="deleted_message_placeholder">[MESSAGE DELETED]</string>
+    <string name="empty_chat_prompt">Select a conversation or start a new encrypted glyph thread.</string>
+</resources>
