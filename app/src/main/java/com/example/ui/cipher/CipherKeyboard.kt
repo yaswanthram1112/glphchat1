@@ -529,12 +529,12 @@ private fun ActionKeyCap(
     val fg = if (isSolid) tokens.canvas else tokens.ink
     val borderColor = if (isSolid) tokens.ink else tokens.hairline
     val topHighlight = if (isSolid) {
-        Color.White.copy(alpha = if (tokens.isDark) 0.35f else 0.22f)
+        if (tokens.isDark) Color.White.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.22f)
     } else {
         tokens.specularTop
     }
     val sheen = if (isSolid) {
-        Color.White.copy(alpha = if (tokens.isDark) 0.12f else 0.08f)
+        if (tokens.isDark) Color.Transparent else Color.White.copy(alpha = 0.08f)
     } else {
         tokens.specularSheen
     }

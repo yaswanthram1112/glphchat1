@@ -76,19 +76,19 @@ fun Modifier.liquidGlassBackdropSource(
     }
 
 /**
- * Subtle pure-monochrome tonal atmosphere behind translucent glass surfaces so
- * frosted panels exhibit clean depth and specular contrast without any chromatic tint.
+ * Subtle pure-monochrome tonal atmosphere behind translucent glass surfaces.
+ * In dark mode, provides deep obsidian contrast without milky white glare.
  */
 fun Modifier.monochromeGlassCanvas(tokens: MonochromeTokens): Modifier = this.drawBehind {
     drawRect(color = tokens.canvas)
 
-    val topGlow = if (tokens.isDark) Color(0xFF1A1A1A) else PureWhite
+    val topGlow = if (tokens.isDark) Color(0xFF141414) else PureWhite
     val bottomTone = if (tokens.isDark) PureBlack else Color(0xFFE7E7E7)
 
     // Upper-left soft monochrome light field
     drawRect(
         brush = Brush.radialGradient(
-            colors = listOf(topGlow.copy(alpha = if (tokens.isDark) 0.55f else 0.90f), Color.Transparent),
+            colors = listOf(topGlow.copy(alpha = if (tokens.isDark) 0.30f else 0.90f), Color.Transparent),
             center = Offset(size.width * 0.15f, size.height * 0.08f),
             radius = maxOf(size.width, size.height) * 0.72f
         )
@@ -97,7 +97,7 @@ fun Modifier.monochromeGlassCanvas(tokens: MonochromeTokens): Modifier = this.dr
     // Lower-right soft neutral depth field
     drawRect(
         brush = Brush.radialGradient(
-            colors = listOf(bottomTone.copy(alpha = if (tokens.isDark) 0.65f else 0.75f), Color.Transparent),
+            colors = listOf(bottomTone.copy(alpha = if (tokens.isDark) 0.50f else 0.75f), Color.Transparent),
             center = Offset(size.width * 0.88f, size.height * 0.86f),
             radius = maxOf(size.width, size.height) * 0.68f
         )
@@ -106,10 +106,9 @@ fun Modifier.monochromeGlassCanvas(tokens: MonochromeTokens): Modifier = this.dr
 
 /**
  * Pure monochrome Liquid Glass / Frosted Glass surface:
- * - Optional real blurred backdrop capture on API 31+ over scrolling content
- * - Semi-transparent monochrome fill (0.72 alpha light/dark)
- * - Soft vertical specular sheen + top-edge specular rim highlight (inset 0 1px 0)
- * - Crisp 1dp hairline glass border (no heavy dark drop shadows)
+ * - Real blurred backdrop capture on API 31+ over scrolling content
+ * - Translucent obsidian dark glass fill in dark mode
+ * - Subtle 1dp hairline glass border
  */
 @Composable
 fun LiquidGlassSurface(
@@ -180,7 +179,6 @@ fun LiquidGlassSurface(
                         )
                     }
                     .drawBehind {
-                        // Read scroll state in draw phase only (zero recompositions while scrolling)
                         @Suppress("UNUSED_VARIABLE")
                         val tick = scrollInvalidationProvider()
                         val layer = backdropState.layer
@@ -204,19 +202,20 @@ fun LiquidGlassSurface(
                 .border(width = 1.dp, brush = borderBrush, shape = shape)
                 .drawWithContent {
                     drawContent()
-                    // Subtle inner top-edge specular rim (inset 0 1px 0 effect)
-                    val strokePx = 1.dp.toPx()
-                    drawLine(
-                        brush = Brush.horizontalGradient(
-                            0.0f to Color.Transparent,
-                            0.18f to topSpecular,
-                            0.82f to topSpecular,
-                            1.0f to Color.Transparent,
-                        ),
-                        start = Offset(0f, strokePx),
-                        end = Offset(size.width, strokePx),
-                        strokeWidth = strokePx,
-                    )
+                    if (topSpecular.alpha > 0.02f) {
+                        val strokePx = 1.dp.toPx()
+                        drawLine(
+                            brush = Brush.horizontalGradient(
+                                0.0f to Color.Transparent,
+                                0.18f to topSpecular,
+                                0.82f to topSpecular,
+                                1.0f to Color.Transparent,
+                            ),
+                            start = Offset(0f, strokePx),
+                            end = Offset(size.width, strokePx),
+                            strokeWidth = strokePx,
+                        )
+                    }
                 }
         )
 
@@ -225,8 +224,7 @@ fun LiquidGlassSurface(
 }
 
 /**
- * Lightweight liquid glass modifier for smaller pills, bubbles, inputs, and keycaps
- * that don't require full backdrop layer capture.
+ * Lightweight liquid glass modifier for smaller pills, bubbles, inputs, and keycaps.
  */
 fun Modifier.liquidGlassChrome(
     shape: Shape,

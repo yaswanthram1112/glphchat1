@@ -257,11 +257,11 @@ fun OnboardingScreen(
                                 fillColor = if (canSubmit) tokens.ink else tokens.glassSoftFill,
                                 borderColor = if (canSubmit) tokens.ink else tokens.hairline,
                                 topHighlightColor = if (canSubmit) {
-                                    Color.White.copy(alpha = if (tokens.isDark) 0.4f else 0.22f)
+                                    if (tokens.isDark) Color.White.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.22f)
                                 } else {
                                     tokens.specularTop
                                 },
-                                sheenColor = if (canSubmit) Color.White.copy(alpha = 0.1f) else Color.Transparent,
+                                sheenColor = if (canSubmit && !tokens.isDark) Color.White.copy(alpha = 0.1f) else Color.Transparent,
                             )
                             .clickable(enabled = canSubmit) {
                                 onSubmit(displayName, handle, pin)

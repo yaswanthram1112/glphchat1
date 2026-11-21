@@ -211,8 +211,8 @@ fun Sidebar(
                                     shape = RoundedCornerShape(16.dp),
                                     fillColor = tokens.ink,
                                     borderColor = tokens.ink,
-                                    topHighlightColor = Color.White.copy(alpha = if (tokens.isDark) 0.4f else 0.22f),
-                                    sheenColor = Color.White.copy(alpha = 0.1f),
+                                    topHighlightColor = if (tokens.isDark) Color.White.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.22f),
+                                    sheenColor = if (tokens.isDark) Color.Transparent else Color.White.copy(alpha = 0.1f),
                                 )
                                 .clickable(onClick = onNewDirectClick)
                                 .testTag("new_direct_chat_button"),

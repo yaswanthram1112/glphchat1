@@ -552,17 +552,17 @@ private fun MessageBubbleRow(
     val bubbleFg = if (isOwn) tokens.canvas else tokens.ink
     val bubbleMuted = if (isOwn) tokens.canvas.copy(alpha = 0.68f) else tokens.mutedInk
     val bubbleBorder = if (isOwn) {
-        if (tokens.isDark) Color.White.copy(alpha = 0.25f) else Color.White.copy(alpha = 0.10f)
+        if (tokens.isDark) Color.White.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.10f)
     } else {
         tokens.hairline
     }
     val bubbleHighlight = if (isOwn) {
-        Color.White.copy(alpha = if (tokens.isDark) 0.45f else 0.18f)
+        if (tokens.isDark) Color.White.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.18f)
     } else {
         tokens.specularTop
     }
     val bubbleSheen = if (isOwn) {
-        Color.White.copy(alpha = if (tokens.isDark) 0.16f else 0.08f)
+        if (tokens.isDark) Color.Transparent else Color.White.copy(alpha = 0.08f)
     } else {
         tokens.specularSheen
     }

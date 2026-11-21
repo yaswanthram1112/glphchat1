@@ -184,8 +184,8 @@ fun AuthScreen(
                                     shape = RoundedCornerShape(18.dp),
                                     fillColor = tokens.ink,
                                     borderColor = tokens.ink,
-                                    topHighlightColor = Color.White.copy(alpha = if (tokens.isDark) 0.4f else 0.25f),
-                                    sheenColor = Color.White.copy(alpha = 0.14f),
+                                    topHighlightColor = if (tokens.isDark) Color.White.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.25f),
+                                    sheenColor = if (tokens.isDark) Color.Transparent else Color.White.copy(alpha = 0.14f),
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
@@ -357,8 +357,8 @@ fun AuthScreen(
                                     shape = RoundedCornerShape(16.dp),
                                     fillColor = tokens.ink,
                                     borderColor = tokens.ink,
-                                    topHighlightColor = Color.White.copy(alpha = if (tokens.isDark) 0.42f else 0.24f),
-                                    sheenColor = Color.White.copy(alpha = 0.12f),
+                                    topHighlightColor = if (tokens.isDark) Color.White.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.24f),
+                                    sheenColor = if (tokens.isDark) Color.Transparent else Color.White.copy(alpha = 0.12f),
                                 )
                                 .clickable(enabled = !isLoading) {
                                     isLoading = true
