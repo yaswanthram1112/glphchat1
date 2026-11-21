@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -752,6 +754,7 @@ fun ProfileDialog(
     isDemoMode: Boolean,
     onSignOutOrExitDemo: () -> Unit,
     onDismiss: () -> Unit,
+    onRefreshSync: () -> Unit = {},
 ) {
     val tokens = LocalMonochromeTokens.current
 
@@ -795,6 +798,41 @@ fun ProfileDialog(
                 style = MaterialTheme.typography.bodySmall,
                 color = tokens.mutedInk,
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(46.dp)
+                    .liquidGlassChrome(
+                        shape = RoundedCornerShape(16.dp),
+                        fillColor = tokens.glassStrongFill,
+                        borderColor = tokens.hairlineStrong,
+                        topHighlightColor = tokens.specularTop,
+                        sheenColor = tokens.specularSheen,
+                    )
+                    .clickable {
+                        onRefreshSync()
+                        onDismiss()
+                    }
+                    .testTag("profile_refresh_sync_button")
+                    .padding(horizontal = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Refresh,
+                    contentDescription = "Sync Over The Air",
+                    tint = tokens.ink,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Sync & Refresh Account (OTA)",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = tokens.ink,
+                )
+            }
 
             Box(
                 modifier = Modifier

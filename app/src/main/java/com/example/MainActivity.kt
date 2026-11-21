@@ -429,6 +429,7 @@ private fun WorkspaceScreen(
                     onToggleTheme = onToggleTheme,
                     onOpenCipherGuide = { showCipherGuideDialog = true },
                     onOpenProfile = { showProfileDialog = true },
+                    onRefreshSync = viewModel::refreshSync,
                     modifier = Modifier
                         .width(340.dp)
                         .fillMaxHeight()
@@ -503,6 +504,7 @@ private fun WorkspaceScreen(
                     onToggleTheme = onToggleTheme,
                     onOpenCipherGuide = { showCipherGuideDialog = true },
                     onOpenProfile = { showProfileDialog = true },
+                    onRefreshSync = viewModel::refreshSync,
                 )
             } else {
                 ChatWindow(
@@ -638,6 +640,7 @@ private fun WorkspaceScreen(
                 showProfileDialog = false
                 onSignOut()
             },
+            onRefreshSync = viewModel::refreshSync,
             onDismiss = { showProfileDialog = false }
         )
     }

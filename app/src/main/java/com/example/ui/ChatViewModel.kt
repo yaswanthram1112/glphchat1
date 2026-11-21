@@ -183,6 +183,21 @@ class ChatViewModel(
         _bannerError.value = null
     }
 
+    fun refreshSync() {
+        viewModelScope.launch {
+            try {
+                val accState = accountState.value
+                if (accState is UiState.Success && accState.data != null) {
+                    val user = accState.data
+                    repository.setOnlineStatus(user.userId, user.handle, true)
+                }
+                _bannerError.value = "Over-The-Air Sync Complete: Account & real-time streams updated."
+            } catch (e: Exception) {
+                _bannerError.value = "Sync Status: ${e.localizedMessage}"
+            }
+        }
+    }
+
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
     }

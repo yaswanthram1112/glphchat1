@@ -33,6 +33,7 @@ import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.GroupAdd
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -90,6 +91,7 @@ fun Sidebar(
     onToggleTheme: () -> Unit,
     onOpenCipherGuide: () -> Unit,
     onOpenProfile: () -> Unit,
+    onRefreshSync: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val tokens = LocalMonochromeTokens.current
@@ -451,6 +453,19 @@ fun Sidebar(
                             Icon(
                                 imageVector = if (isDarkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
                                 contentDescription = stringResource(R.string.cd_toggle_theme),
+                                tint = tokens.ink,
+                                modifier = Modifier.size(19.dp)
+                            )
+                        }
+                        IconButton(
+                            onClick = onRefreshSync,
+                            modifier = Modifier
+                                .size(44.dp)
+                                .testTag("sidebar_refresh_sync_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Refresh,
+                                contentDescription = "Sync Over The Air",
                                 tint = tokens.ink,
                                 modifier = Modifier.size(19.dp)
                             )
