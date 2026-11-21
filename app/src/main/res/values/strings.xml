@@ -18,7 +18,7 @@
     <string name="cd_toggle_theme">Toggle light and dark theme</string>
     <string name="cd_cipher_guide">Open cipher alphabet guide</string>
     <string name="cd_profile">Open account profile</string>
-    <string name="cd_back">Navigate back</string>
+    <string name="cd_back" translatable="false">Navigate back</string>
     <string name="cd_peek_all">Toggle plain English decode for all messages</string>
     <string name="cd_peek_bubble">Toggle plain English decode for message</string>
     <string name="cd_group_info">Manage group members</string>

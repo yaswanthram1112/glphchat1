@@ -903,14 +903,13 @@ private fun PeerResultCard(
                         color = tokens.ink,
                     )
                 }
-                val isOnline = entry.isCurrentlyOnline()
                 Box(
                     modifier = Modifier
                         .size(9.dp)
                         .align(Alignment.BottomEnd)
                         .clip(CircleShape)
-                        .background(if (isOnline) tokens.ink else tokens.canvas)
-                        .border(1.5.dp, if (isOnline) tokens.canvas else tokens.mutedInk, CircleShape)
+                        .background(if (entry.online) tokens.ink else tokens.canvas)
+                        .border(1.5.dp, if (entry.online) tokens.canvas else tokens.mutedInk, CircleShape)
                 )
             }
 

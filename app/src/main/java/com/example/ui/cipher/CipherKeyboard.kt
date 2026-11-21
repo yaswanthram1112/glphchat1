@@ -27,8 +27,12 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,12 +44,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import com.example.R
 import com.example.ui.theme.JetBrainsMonoFamily
 import com.example.ui.theme.LocalMonochromeTokens
@@ -177,9 +183,8 @@ fun CipherKeyboard(
                             modifier = Modifier.weight(1f),
                         )
                     }
-                    ActionKeyCap(
-                        onClick = onBackspace,
-                        inverted = false,
+                    RepeatingActionKeyCap(
+                        onBackspace = onBackspace,
                         modifier = Modifier
                             .weight(1.55f)
                             .testTag("cipher_key_backspace")
@@ -231,9 +236,8 @@ fun CipherKeyboard(
                             modifier = Modifier.weight(1f),
                         )
                     }
-                    ActionKeyCap(
-                        onClick = onBackspace,
-                        inverted = false,
+                    RepeatingActionKeyCap(
+                        onBackspace = onBackspace,
                         modifier = Modifier
                             .weight(1.6f)
                             .testTag("cipher_key_backspace_sym")
@@ -439,6 +443,67 @@ private fun SymbolKeyCap(
             fontSize = 16.sp,
             color = fg
         )
+    }
+}
+
+@Composable
+private fun RepeatingActionKeyCap(
+    onBackspace: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (Color) -> Unit,
+) {
+    val tokens = LocalMonochromeTokens.current
+    val haptic = LocalHapticFeedback.current
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.94f else 1f,
+        animationSpec = spring(dampingRatio = 0.65f, stiffness = 700f),
+        label = "backspace_scale"
+    )
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            onBackspace()
+            delay(350L)
+            while (isPressed) {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onBackspace()
+                delay(45L)
+            }
+        }
+    }
+
+    val bg = if (isPressed) tokens.ink else tokens.glassSoftFill
+    val fg = if (isPressed) tokens.canvas else tokens.ink
+    val borderColor = if (isPressed) tokens.ink else tokens.hairline
+
+    Box(
+        modifier = modifier
+            .height(48.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .liquidGlassChrome(
+                shape = KeyCapShape,
+                fillColor = bg,
+                borderColor = borderColor,
+                topHighlightColor = if (isPressed) Color.White.copy(alpha = 0.35f) else tokens.specularTop,
+                sheenColor = if (isPressed) Color.Transparent else tokens.specularSheen,
+            )
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    awaitFirstDown()
+                    isPressed = true
+                    waitForUpOrCancellation()
+                    isPressed = false
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        content(fg)
     }
 }
 
