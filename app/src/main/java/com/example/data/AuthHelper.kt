@@ -181,24 +181,25 @@ fun onGoogleSignInClicked(
 fun signOutGoogle(
     credentialManager: CredentialManager,
     scope: CoroutineScope,
-    onBeforeSignOut: suspend () -> Unit = {},
+    onBeforeSignOut: () -> Unit = {},
     onSignOutComplete: () -> Unit = {},
 ) {
-    scope.launch {
-        withContext(NonCancellable) {
-            try {
-                onBeforeSignOut()
-            } catch (e: Exception) {
-                Log.w(AUTH_TAG, "Pre-signout cleanup warning: ${e.message}")
-            }
-            try {
-                credentialManager.clearCredentialState(ClearCredentialStateRequest())
-            } catch (e: Exception) {
-                Log.w(AUTH_TAG, "Failed to clear credential state: ${e.message}")
-            } finally {
-                Firebase.auth.signOut()
-                onSignOutComplete()
-            }
+    scope.launch(NonCancellable) {
+        try {
+            onBeforeSignOut()
+        } catch (e: Exception) {
+            Log.w(AUTH_TAG, "Pre-signout cleanup warning: ${e.message}")
         }
+        try {
+            credentialManager.clearCredentialState(ClearCredentialStateRequest())
+        } catch (e: Exception) {
+            Log.w(AUTH_TAG, "Failed to clear credential state: ${e.message}")
+        }
+        try {
+            Firebase.auth.signOut()
+        } catch (e: Exception) {
+            Log.e(AUTH_TAG, "Firebase sign out error: ${e.message}")
+        }
+        onSignOutComplete()
     }
 }

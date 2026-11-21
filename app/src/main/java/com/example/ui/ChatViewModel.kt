@@ -287,10 +287,16 @@ class ChatViewModel(
         }
     }
 
-    suspend fun markOfflineBeforeSignOut() {
+    fun markOfflineBeforeSignOut() {
         val account = (accountState.value as? UiState.Success)?.data ?: return
         if (account.handle.isNotBlank()) {
-            repository.setOnlineStatus(currentUserId, account.handle, false)
+            viewModelScope.launch {
+                try {
+                    repository.setOnlineStatus(currentUserId, account.handle, false)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Sign-out presence update warning", e)
+                }
+            }
         }
     }
 
