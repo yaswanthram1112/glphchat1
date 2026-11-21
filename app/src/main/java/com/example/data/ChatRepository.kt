@@ -358,7 +358,6 @@ class FirebaseChatRepository(
         val path = "chats/$chatId/messages"
         emitAll(
             db.collection("chats").document(chatId).collection("messages")
-                .whereArrayContains("memberUids", uid)
                 .snapshots()
                 .map { snapshot ->
                     snapshot.toObjects(
