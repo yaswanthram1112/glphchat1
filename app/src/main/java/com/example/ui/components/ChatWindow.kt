@@ -138,9 +138,20 @@ fun ChatWindow(
             decodedMessageIds.size * 7
     }
 
+    // Scroll to bottom when new messages arrive
     LaunchedEffect(chatRoom.id, messageList.size) {
         if (messageList.isNotEmpty()) {
             listState.animateScrollToItem(messageList.lastIndex)
+        }
+    }
+
+    // STRICT UNREAD GUARD: Only trigger mark-as-read when there are actual unread items
+    val hasUnread = remember(chatRoom.readByUids, messageList, currentUserId) {
+        !chatRoom.readByUids.contains(currentUserId) ||
+            messageList.any { !it.readByUids.contains(currentUserId) }
+    }
+    LaunchedEffect(chatRoom.id, hasUnread) {
+        if (hasUnread) {
             onMarkRead()
         }
     }
