@@ -407,7 +407,12 @@ class ChatViewModel(
 
     fun sendMessage() {
         val chat = selectedChat.value ?: return
-        val account = (accountState.value as? UiState.Success)?.data ?: return
+        val account = (accountState.value as? UiState.Success)?.data ?: UserAccount(
+            id = currentUserId,
+            userId = currentUserId,
+            displayName = suggestedDisplayName.ifBlank { "User" },
+            handle = "user_${currentUserId.take(6)}"
+        )
         val text = _composerText.value.trim()
         if (text.isEmpty()) return
         val reply = _replyTarget.value

@@ -534,7 +534,7 @@ class FirebaseChatRepository(
 
             val batch = db.batch()
             batch.set(msgRef, payload)
-            batch.update(
+            batch.set(
                 db.collection("chats").document(chatRoom.id),
                 mapOf(
                     "lastMessageText" to cleanText.take(1000),
@@ -542,7 +542,8 @@ class FirebaseChatRepository(
                     "lastMessageAt" to FieldValue.serverTimestamp(),
                     "readByUids" to listOf(uid),
                     "updatedAt" to FieldValue.serverTimestamp(),
-                )
+                ),
+                SetOptions.merge()
             )
             batch.commit().await()
             Result.success(Unit)
