@@ -149,12 +149,7 @@ private fun AppContent(
                             val app = checkNotNull(this[APPLICATION_KEY]) {
                                 "APPLICATION_KEY missing from CreationExtras"
                             }
-                            val dbId = app.getString(R.string.firestore_database_id)
-                            val db = if (dbId.isBlank() || dbId == "(default)") {
-                                Firebase.firestore
-                            } else {
-                                FirebaseFirestore.getInstance(dbId)
-                            }
+                            val db = com.example.data.getFirestoreInstance(app)
                             ChatViewModel(
                                 repository = FirebaseChatRepository(db),
                                 currentUserId = user.uid,

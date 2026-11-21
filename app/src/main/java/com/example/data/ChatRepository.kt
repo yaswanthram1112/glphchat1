@@ -77,21 +77,29 @@ interface ChatRepository {
     suspend fun deleteMessage(chatId: String, messageId: String): Result<Unit>
 }
 
+fun getFirestoreInstance(context: Context): FirebaseFirestore {
+    val dbId = context.applicationContext.getString(R.string.firestore_database_id)
+    val db = if (dbId.isBlank() || dbId == "(default)") {
+        Firebase.firestore
+    } else {
+        FirebaseFirestore.getInstance(dbId)
+    }
+    if (System.getProperty("use_firestore_emulator") == "true") {
+        try {
+            db.useEmulator("10.0.2.2", 8080)
+        } catch (_: Exception) {
+            // Emulator already attached
+        }
+    }
+    return db
+}
+
 class FirebaseChatRepository(
     private val db: FirebaseFirestore,
     private val auth: FirebaseAuth = Firebase.auth,
 ) : ChatRepository {
 
-    constructor(context: Context) : this(
-        run {
-            val dbId = context.applicationContext.getString(R.string.firestore_database_id)
-            if (dbId.isBlank() || dbId == "(default)") {
-                Firebase.firestore
-            } else {
-                FirebaseFirestore.getInstance(dbId)
-            }
-        }
-    )
+    constructor(context: Context) : this(getFirestoreInstance(context))
 
     override val isDemoMode: Boolean = false
 
