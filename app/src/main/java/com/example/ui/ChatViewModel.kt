@@ -68,13 +68,9 @@ class ChatViewModel(
     val accountState: StateFlow<UiState<UserAccount?>> = repository.observeUserAccount(currentUserId)
         .map<UserAccount?, UiState<UserAccount?>> { UiState.Success(it) }
         .catch { error ->
-            val firestoreError = generateSequence(error) { it.cause }
-                .filterIsInstance<FirebaseFirestoreException>()
-                .firstOrNull()
-            if (firestoreError == null && error is CancellationException) throw error
-            val rootError = firestoreError ?: error
-            Log.w(TAG, "Error observing account", rootError)
-            emit(UiState.Error(rootError.message ?: "Failed to load user profile"))
+            if (error is CancellationException) throw error
+            Log.w(TAG, "Error observing account", error)
+            emit(UiState.Error(parseFirestoreError(error, "Failed to load user profile")))
         }
         .stateIn(
             scope = viewModelScope,
@@ -86,13 +82,9 @@ class ChatViewModel(
     val chatsState: StateFlow<UiState<List<ChatRoom>>> = repository.observeChats(currentUserId)
         .map<List<ChatRoom>, UiState<List<ChatRoom>>> { UiState.Success(it) }
         .catch { error ->
-            val firestoreError = generateSequence(error) { it.cause }
-                .filterIsInstance<FirebaseFirestoreException>()
-                .firstOrNull()
-            if (firestoreError == null && error is CancellationException) throw error
-            val rootError = firestoreError ?: error
-            Log.w(TAG, "Error observing chats", rootError)
-            emit(UiState.Error(rootError.message ?: "Failed to load conversations"))
+            if (error is CancellationException) throw error
+            Log.w(TAG, "Error observing chats", error)
+            emit(UiState.Error(parseFirestoreError(error, "Failed to load conversations")))
         }
         .stateIn(
             scope = viewModelScope,
@@ -124,13 +116,9 @@ class ChatViewModel(
                 repository.observeMessages(chatId, currentUserId)
                     .map<List<ChatMessage>, UiState<List<ChatMessage>>> { UiState.Success(it) }
                     .catch { error ->
-                        val firestoreError = generateSequence(error) { it.cause }
-                            .filterIsInstance<FirebaseFirestoreException>()
-                            .firstOrNull()
-                        if (firestoreError == null && error is CancellationException) throw error
-                        val rootError = firestoreError ?: error
-                        Log.w(TAG, "Error observing messages", rootError)
-                        emit(UiState.Error(rootError.message ?: "Failed to load messages"))
+                        if (error is CancellationException) throw error
+                        Log.w(TAG, "Error observing messages", error)
+                        emit(UiState.Error(parseFirestoreError(error, "Failed to load messages")))
                     }
             }
         }
@@ -139,6 +127,22 @@ class ChatViewModel(
             started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = UiState.Success(emptyList())
         )
+
+    private fun parseFirestoreError(error: Throwable, defaultMessage: String): String {
+        val firestoreError = generateSequence(error) { it.cause }
+            .filterIsInstance<FirebaseFirestoreException>()
+            .firstOrNull()
+        val rootError = firestoreError ?: error
+        val msg = rootError.message.orEmpty()
+        return when {
+            msg.contains("OFFLINE") || msg.contains("UNAVAILABLE") || msg.contains("NOT_FOUND") ->
+                "Firestore Database is not created in Firebase Console. Please open Firebase Console > Firestore Database > Create Database."
+            msg.contains("PERMISSION_DENIED") ->
+                "Permission denied. Please publish test rules in Firebase Console > Firestore Database > Rules."
+            else ->
+                rootError.message ?: defaultMessage
+        }
+    }
 
     // 4. Live Peer Online/Offline Presence for active Direct Chat
     val activePeerPresence: StateFlow<HandleDirectoryEntry?> = selectedChat
